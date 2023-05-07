@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standings</title>
+    <!-- Add Bootstrap CSS and JS links here -->
+</head>
+<body>
+    <h1>Standings</h1>
+
+    <h2>Total Points (through week {{ max_week }})</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Player</th>
+                <th scope="col">Total Points</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for player_point in player_points %}
+            <tr>
+                <td>{{ player_point[1] }}</td>
+                <td>{{ player_point[2] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Player Rosters</h2>
+    {% for player in player_points %}
+        <h3>{{ player[1] }}</h3>
+        <ul class="list-group">
+        {% for obj in player_objects %}
+            {% if obj[0] == player[0] %}
+                {% if obj[3] == 1 %}
+                    <li class="list-group-item" style="text-decoration: line-through;">{{ obj[2] }}</li>
+                {% else %}
+                    <li class="list-group-item">{{ obj[2] }}</li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% endfor %}
+
+    <h2>Points by Object by Week</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Object</th>
+                <th scope="col">Owner</th>
+                {% for week in range(1, max_week + 1) %}
+                <th scope="col">Week {{ week }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for player in player_points %}
+            {% for obj in player_objects %}
+                {% if obj[0] == player[0] %}
+                    <tr>
+                        <td>{{ obj[2] }}</td>
+                        <td><small>{{ player[1] }}</small></td>
+                        {% for week in range(1, max_week + 1) %}
+                        <td>{{ points_by_week.get(obj[1], {}).get(week, 0) }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <a href="{{ url_for('home') }}">Home</a>
+</body>
+</html>
