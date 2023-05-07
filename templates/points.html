@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Points</title>
+</head>
+<body>
+    <h1>Points</h1>
+
+    <form method="post" action="{{ url_for('points') }}">
+        <label for="object_id">Object:</label>
+        <select name="object_id" id="object_id">
+            {% for object in objects %}
+            <option value="{{ object[0] }}">{{ object[1] }} ({{ object[2] }})</option>
+            {% endfor %}
+        </select>
+
+        <label for="category_id">Category:</label>
+        <select name="category_id" id="category_id">
+            {% for category in categories %}
+            <option value="{{ category[0] }}">{{ category[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="week">Week:</label>
+        <input type="number" name="week" id="week" min="1" required>
+
+        <label for="notes">Notes:</label>
+        <textarea name="notes" id="notes" rows="4" cols="50"></textarea>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Object</th>
+                <th scope="col">Category</th>
+                <th scope="col">Week</th>
+                <th scope="col">Points</th>
+                <th scope="col">Notes</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for point in points %}
+            <tr>
+                <td>{{ point[1] }}</td>
+                <td>{{ point[2] }}</td>
+                <td>{{ point[3] }}</td>
+                <td>{{ point[4] }}</td>
+                <td>{{ point[5] }}</td>
+                <td>
+                    <form action="{{ url_for('delete_point', point_id=point[0]) }}" method="POST">
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('home') }}">Home</a>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
